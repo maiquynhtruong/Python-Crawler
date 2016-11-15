@@ -1,9 +1,10 @@
 import requests
 from bs4 import BeautifulSoup
 import urllib2
+import sqlite3
 
 def spider(username):
-	url = 'https://www.quora.com/profile/'+ username + '/following'
+	url = 
 	# url = 'http://kukuruku.co/hub/nix/writing-a-file-system-in-linux-kernel'
 	file = urllib2.urlopen(url)
 	print file.read()
