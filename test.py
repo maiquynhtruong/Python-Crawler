@@ -17,8 +17,9 @@ def start():
 
 
 
-url = 'https://www.reddit.com/r/dailyprogrammer/'
-allPost = 'http://www.reddit.com/r/AccidentalRenaissance/search.json?restrict_sr=on&t=all'
-subreddit = 'dailyprogrammer'
+url = 'https://www.reddit.com/r/' + subreddit
+subreddit = 'AccidentalRenaissance'
+allPost = 'http://www.reddit.com/r/'+ subreddit +'/search.json?restrict_sr=on&t=all'
+
 user_agent = 'Reddit Crawler 0.1 (by /u/mqtruong)'
 start()

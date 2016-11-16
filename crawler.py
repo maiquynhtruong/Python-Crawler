@@ -3,20 +3,23 @@ import urllib2
 import praw
 import time
 import json
+import re
 
 challengeList = {}
 
 def start():
-	r = praw.Reddit(user_agent = user_agent)
-	subReddit = r.get_subreddit('dailyprogrammer')
-	subReddit.get_submissions()
-	submission = 'Title'
-	# if 'Challenge ' in submission.title:
-		# write regex to get the challenge type
-		# Three categories: hard, intermediate and easy
-	category = 'hard'
-	sortChallenge(submission, category)
-	print requestJson(subReddit.)
+	res = urllib2.urlopen(frontPage)
+	text = res.read() 
+	jsonFile = json.loads(text)['data']['children']
+	for item in jsonFile:
+		title = item['data']['title']
+		p = re.compile('(Easy|Intermediate|Hard)')
+		m = p.search(title)
+		if m:
+			print 'Title:', title
+			print 'Link:', suffix + item['data']['permalink']
+			category = m.group() #The word that matches
+	# sortChallenge(submission, category)
 
 
 def sortChallenge(challenge, type):
@@ -32,7 +35,6 @@ def requestJson(url, delay):
 		res = file.read()
 		return json.load(res)
 
-
 def displayChallenges():
 	for i in challengeList['easy']:
 		print i
@@ -41,7 +43,13 @@ def displayChallenges():
 	for i in challengeList['hard']:
 		print i
 
-url = 'https://www.reddit.com/r/dailyprogrammer/.json'
+frontPage = 'https://www.reddit.com/r/dailyprogrammer.json'
+subreddit = 'dailyprogrammer'
+suffix = 'https://www.reddit.com'
+url = 'https://www.reddit.com/r/' + subreddit
 user_agent = 'Reddit Crawler 0.1 (by /u/mqtruong)'
 user_name = 'mqtruong'
+allPost = 'http://www.reddit.com/r/'+ subreddit +'/search.json?restrict_sr=on&t=all'
 start()
+
+
