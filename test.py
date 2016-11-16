@@ -8,17 +8,17 @@ def start():
 	subReddit = r.get_subreddit('dailyprogrammer')
 	f = open('output.txt', 'w')
 	# f.write(subReddit)
-	print r.get_popular_subreddits(url)
 	# pprint r.get_popular_subreddits(url)
-	print subReddit.get_hot()
-	submission = r.get_submission(submission_id = "105aru")
-	pprint.pprint(dir(submission))
-	pprint.pprint(vars(submission))
-	print submission.title
-	print submission.selftext
+	# submissions = r.get_submissions(subreddit)
+	res = urllib2.urlopen(allPost)
+	text = res.read() 
+	pprint.pprint(json.loads(text)['data']['children'])
+
 
 
 
 url = 'https://www.reddit.com/r/dailyprogrammer/'
+allPost = 'http://www.reddit.com/r/AccidentalRenaissance/search.json?restrict_sr=on&t=all'
+subreddit = 'dailyprogrammer'
 user_agent = 'Reddit Crawler 0.1 (by /u/mqtruong)'
 start()
