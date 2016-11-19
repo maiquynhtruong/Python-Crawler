@@ -1,64 +1,72 @@
+
 import requests
 import urllib2
 import praw
 import time
 import json
 import re
+import sys
 
 challengeList = {}
 
-def start():
-	# f = open('output.md', 'w')
+def startCrawling():
 	nextPage = ''
-	for i in range(2):
+	for i in range(3):
 		time.sleep(10)
 		print '\n\nPage ' + str(i+1) + '\n\n'
 		jsonFile = requestJson(pageLink + nextPage)
 		nextPage = jsonFile['after']
 		jsonFile = jsonFile['children']
 		for item in jsonFile:
+			link = item['data']['permalink']
 			title = item['data']['title']
 			p = re.compile('(Easy|Intermediate|Hard)')
 			m = p.search(title)
 			if m:
-				# print 'Title:', title
-				# print 'Link:', suffix + item['data']['permalink']
 				category = m.group() #The word that matches
-				sortChallenge(title, category)
+				sortChallenge((title, link), category)
 
 
-def sortChallenge(challenge, type):
+def sortChallenge(submisison, type):
+	print submisison
 	if type not in challengeList:
 		# if the challenge does not exist yet, create a new one
 		challengeList[type] = set()
-	challengeList[type].add(challenge)
+	challengeList[type].add(submisison)
 
 def requestJson(url):
 	
 	file = urllib2.urlopen(url)
 	text = file.read()
- 
 	return json.loads(text)['data']
 
 
 def displayChallenges():
-	
-	print 'Easy challenges'
+	f = open('output.md', 'w')
+	print 'Easy challenges\n\n'
+	f.write('\n\nEasy challenges\n\n')
 	for i in challengeList['Easy']:
-		print i
-	print 'Intermediate challenges'
+		# print i[0]
+		f.write('[' + str(i[0]) + '](' + str(i[1]) + ')' + '\n')
+	print 'Intermediate challenges''\n\n'
+	f.write('\n\nIntermediate challenges\n\n')
 	for i in challengeList['Intermediate']:
-		print i
-	print 'Hard challenges'
+		# print i
+		f.write('[' + str(i[0]) + '](' + str(i[1]) + ')' + '\n')
+	print 'Hard challenges\n\n'
+	f.write('\n\nHard challenges\n\n')
 	for i in challengeList['Hard']:
-		print i
+		# print i
+		f.write('[' + str(i[0]) + '](' + str(i[1]) + ')' + '\n')
+
+reload(sys)
+sys.setdefaultencoding('utf-8')
 
 subreddit = 'dailyprogrammer'
-suffix = 'https://www.reddit.com'
 user_agent = 'Reddit Crawler 0.1 (by /u/mqtruong)'
-user_name = 'mqtruong'
 pageLink = 'https://www.reddit.com/r/dailyprogrammer.json?limit=100&count=100&after='
-start()
+
+startCrawling()
 displayChallenges()
 
 
