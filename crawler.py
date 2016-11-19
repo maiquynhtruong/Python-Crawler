@@ -8,18 +8,23 @@ import re
 challengeList = {}
 
 def start():
-	res = urllib2.urlopen(frontPage)
-	text = res.read() 
-	jsonFile = json.loads(text)['data']['children']
-	for item in jsonFile:
-		title = item['data']['title']
-		p = re.compile('(Easy|Intermediate|Hard)')
-		m = p.search(title)
-		if m:
-			print 'Title:', title
-			print 'Link:', suffix + item['data']['permalink']
-			category = m.group() #The word that matches
-	# sortChallenge(submission, category)
+	# f = open('output.md', 'w')
+	nextPage = ''
+	for i in range(2):
+		time.sleep(10)
+		print '\n\nPage ' + str(i+1) + '\n\n'
+		jsonFile = requestJson(pageLink + nextPage)
+		nextPage = jsonFile['after']
+		jsonFile = jsonFile['children']
+		for item in jsonFile:
+			title = item['data']['title']
+			p = re.compile('(Easy|Intermediate|Hard)')
+			m = p.search(title)
+			if m:
+				print 'Title:', title
+				print 'Link:', suffix + item['data']['permalink']
+				category = m.group() #The word that matches
+				sortChallenge(submission, category)
 
 
 def sortChallenge(challenge, type):
@@ -28,28 +33,31 @@ def sortChallenge(challenge, type):
 		challengeList[type] = set()
 	challengeList[type].add(challenge)
 
-def requestJson(url, delay):
-	while True:
-		time.sleep(delay)
-		file = urllib2.urlopen(url)
-		res = file.read()
-		return json.load(res)
+def requestJson(url):
+	
+	file = urllib2.urlopen(url)
+	text = file.read()
+ 
+	return json.loads(text)['data']
+
 
 def displayChallenges():
-	for i in challengeList['easy']:
+	print 'Easy challenges'
+	for i in challengeList['Easy']:
 		print i
-	for i in challengeList['intermediate']:
+	print 'Intermediate challenges'
+	for i in challengeList['Intermediate']:
 		print i
-	for i in challengeList['hard']:
+	print 'Hard challenges'
+	for i in challengeList['Hard']:
 		print i
 
-frontPage = 'https://www.reddit.com/r/dailyprogrammer.json'
 subreddit = 'dailyprogrammer'
 suffix = 'https://www.reddit.com'
-url = 'https://www.reddit.com/r/' + subreddit
 user_agent = 'Reddit Crawler 0.1 (by /u/mqtruong)'
 user_name = 'mqtruong'
-allPost = 'http://www.reddit.com/r/'+ subreddit +'/search.json?restrict_sr=on&t=all'
+pageLink = 'https://www.reddit.com/r/dailyprogrammer.json?limit=100&count=100&after='
 start()
+displayChallenges()
 
 
