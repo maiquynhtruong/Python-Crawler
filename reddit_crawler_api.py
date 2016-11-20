@@ -20,7 +20,7 @@ def start_crawling():
 	reddit = praw.Reddit(user_agent = user_agent)
 	# sub_reddit = reddit.get_subreddit(subreddit_name = subreddit_name)
 	# sub_reddit.get_new(limit=None)
-	submissions = reddit.get_content(url=url, limit=100)
+	submissions = reddit.get_content(url=url, limit=200)
 	for sub in submissions:
 		# print str(sub) + '\n'
 		addToList(submission=sub)		
@@ -46,14 +46,14 @@ def addToList(submission):
 	else:
 		week[monday]['Other'].add(submission)
 
-row_template = '|{Easy}|{Intermediate}|{Hard}|{Other}|'
+row_template = '|{Easy}|{Intermediate}|{Hard}|{Other}|\n'
 link_template = '[{text}]({url})'
 empty_link = '[]()'
 empty_dash = '**-**'
 def show_challenges():
 	f = open('output.md','w')
-	f.write('Easy | Intermediate | Hard | Weekly / Bonus / Misc')
-	f.write('-----|--------------|------|----------------------')
+	f.write('Easy | Intermediate | Hard | Weekly / Bonus / Misc\n')
+	f.write('-----|--------------|------|----------------------\n')
 	for monday, contents in sorted(week.items()):
 		easy = []
 		for item in contents['Easy']:
