@@ -11,29 +11,25 @@ week = {}
 
 def get_monday(post_time):
 	monday = post_time - datetime.timedelta(days=post_time.weekday())
-	# print monday.isoformat()
-	# print monday.strftime('%y-%m-%d')
 	return monday.toordinal()
 
 
 def start_crawling():
 	reddit = praw.Reddit(user_agent = user_agent)
-	# sub_reddit = reddit.get_subreddit(subreddit_name = subreddit_name)
-	# sub_reddit.get_new(limit=None)
-	submissions = reddit.get_content(url=url, limit=200)
+	submissions = reddit.get_content(url=url, limit=200) # Change the limit here for more posts
 	for sub in submissions:
-		# print str(sub) + '\n'
 		addToList(submission=sub)		
 
 
 def addToList(submission):
+	'''
+		Add the submission to list. The submissions are grouped by the Monday of the week in 
+		which the post was created. The posts are put into sets 'Easy', 'Intermediate', and 'Hard' 
+		depending on the tag in the post's title
+	'''
 	time = datetime.datetime.utcfromtimestamp(submission.created_utc)
 	monday = get_monday(time)
 	title = submission.title.lower()
-	# p = re.compile('Easy|Intermediate|Hard|Other')
-	# res = p.search(title)
-	# if res:
-		# category = res.group() # string matched by re	
 		
 	week[monday] = week.get(monday, {'Easy' : set(), 'Intermediate' : set(), 'Hard' : set(), 'Other' : set()})
 	# get the values of that monday, if it does not exist yet, create a new dict from monday
