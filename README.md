@@ -7,3 +7,5 @@ The challenge is https://www.reddit.com/r/dailyprogrammer/comments/41hp6u/201601
 reddit_crawler.py contains the code without using the API.
 
 reddit_crawler_with_api.py contains the code made using API.
+
+The output is in the file [output.md](/output.md)
